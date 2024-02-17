@@ -1,6 +1,7 @@
 api/node_modules
 api/.env
 api/package-lock.json
+api/public
 
 app/node_modules
 app/.env
