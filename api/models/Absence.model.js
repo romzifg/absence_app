@@ -11,9 +11,9 @@ module.exports = (sequelize, DataTypes) => {
     Absence.init({
         absence_id: {
             type: DataTypes.INTEGER,
-            defaultValue: DataTypes.INTEGER,
             allowNull: false,
-            primaryKey: true
+            primaryKey: true,
+            autoIncrement: true
         },
         user_id: {
             type: DataTypes.INTEGER,

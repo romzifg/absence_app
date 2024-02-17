@@ -10,9 +10,9 @@ module.exports = (sequelize, DataTypes) => {
     User.init({
         user_id: {
             type: DataTypes.INTEGER,
-            defaultValue: DataTypes.INTEGER,
             allowNull: false,
-            primaryKey: true
+            primaryKey: true,
+            autoIncrement: true
         },
         code: {
             type: DataTypes.STRING,

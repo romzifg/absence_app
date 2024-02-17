@@ -1,3 +1,4 @@
+const { generateCode } = require('../helpers/generateCode');
 const {
     User
 } = require('../models');
@@ -22,7 +23,23 @@ exports.getUser = async (req, res) => {
 
 exports.storeUser = async (req, res) => {
     try {
-        const data = await User.create({ ...req.body })
+        let code = ""
+
+        code = generateCode()
+        if (code === "") {
+            return res.status(400).json({
+                statusCode: 400,
+                message: 'Bad Request, Error Generate Code',
+                data: null
+            })
+        }
+
+        const checkUser = await User.findOne({ where: { code: code } })
+        if (checkUser) {
+            code = generateCode()
+        }
+
+        const data = await User.create({ ...req.body, code: code })
 
         return res.status(200).json({
             statusCode: 200,
@@ -30,6 +47,7 @@ exports.storeUser = async (req, res) => {
             data: data
         })
     } catch (err) {
+        console.log(err)
         return res.status(400).json({
             statusCode: 400,
             message: 'Bad Request',
