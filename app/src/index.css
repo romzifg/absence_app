@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.custom-table, tr, td, th {
+  border: 1px solid #c8c8c8;
+  border-collapse: collapse;
+  padding: 5px 15px;
+  text-align: center;
+}
+
+.custom-table thead {
+  background-color: #60a5fa;
+  color: white;
+  font-size: 16px;
+}

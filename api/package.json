@@ -1,0 +1,27 @@
+{
+  "name": "qr_absence",
+  "version": "1.0.0",
+  "description": "API Qr Absence",
+  "main": "app.js",
+  "scripts": {
+    "dev": "nodemon app.js",
+    "start": "node app.js"
+  },
+  "author": "RCode",
+  "license": "ISC",
+  "dependencies": {
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dayjs": "^1.11.10",
+    "dotenv": "^16.4.4",
+    "exceljs": "^4.4.0",
+    "express": "^4.18.2",
+    "i": "^0.3.7",
+    "mysql2": "^3.9.1",
+    "nodemon": "^3.0.3",
+    "npm": "^10.4.0",
+    "path": "^0.12.7",
+    "sequelize": "^6.37.0",
+    "sequelize-cli": "^6.6.2"
+  }
+}

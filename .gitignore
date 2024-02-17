@@ -1,0 +1,9 @@
+api/node_modules
+api/.env
+api/package-lock.json
+
+app/node_modules
+app/.env
+app/package-lock.json
+
+.vscode
