@@ -2,6 +2,7 @@ const {
     User
 } = require('../models');
 const validator = require('validator');
+const excel = require('exceljs');
 const { generateCode } = require('../helpers/generateCode');
 const { responseSuccess, responseBadRequest, responseNotFound } = require('../helpers/response');
 
@@ -40,6 +41,57 @@ exports.storeUser = async (req, res) => {
         return responseSuccess(res, data)
     } catch (err) {
         return responseBadRequest(res)
+    }
+}
+
+exports.userBulkCreate = async (req, res) => {
+    try {
+        const filepath = req.body.path.replace(`${req.protocol}://${req.get('host')}`, "")
+        const path = `${__dirname}/..${filepath}`
+
+        const workbook = new excel.Workbook();
+        await workbook.xlsx.readFile(path);
+        let userData = [];
+        workbook.worksheets.forEach(function (sheet) {
+            // read first row as data keys
+            let firstRow = sheet.getRow(1);
+            if (!firstRow.cellCount) return;
+            let keys = firstRow.values;
+            sheet.eachRow((row, rowNumber) => {
+                if (rowNumber == 1) return;
+                let values = row.values
+                let obj = {};
+                for (let i = 1; i < keys.length; i++) {
+                    obj[keys[i]] = values[i];
+                }
+                userData.push(obj);
+            })
+
+        });
+
+        await Promise.all(userData.map(async (el) => {
+            let code = ""
+
+            code = generateCode()
+            if (code === "") {
+                return responseBadRequest(res, "Bad Request, Error Generate Code")
+            }
+
+            const checkUser = await User.findOne({ where: { code: code } })
+            if (checkUser) {
+                code = generateCode()
+            }
+
+            el.code = code
+            el.email = el.email.text
+        }))
+
+        const data = await User.bulkCreate(userData)
+
+        return responseSuccess(res, data.length)
+    } catch (err) {
+        return responseBadRequest(res)
+
     }
 }
 
