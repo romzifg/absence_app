@@ -25,6 +25,9 @@ module.exports = (sequelize, DataTypes) => {
         email: {
             type: DataTypes.STRING,
         },
+        deletedAt: {
+            type: DataTypes.DATE,
+        },
     }, {
         sequelize,
         modelName: 'User',
