@@ -5,7 +5,7 @@ const {
 
 exports.getUser = async (req, res) => {
     try {
-        const data = await User.findAll()
+        const data = await User.findAll({ where: { deletedAt: null } })
 
         return res.status(200).json({
             statusCode: 200,
@@ -58,7 +58,7 @@ exports.storeUser = async (req, res) => {
 
 exports.updateUser = async (req, res) => {
     try {
-        const user = await User.findOne({ where: { user_id: req.params.id } })
+        const user = await User.findOne({ where: { user_id: req.params.id, deletedAt: null } })
         if (!user) {
             return res.status(404).json({
                 statusCode: 404,
@@ -85,7 +85,7 @@ exports.updateUser = async (req, res) => {
 
 exports.deleteUser = async (req, res) => {
     try {
-        const user = await User.findOne({ where: { user_id: req.params.id } })
+        const user = await User.findOne({ where: { user_id: req.params.id, deletedAt: null } })
         if (!user) {
             return res.status(404).json({
                 statusCode: 404,
