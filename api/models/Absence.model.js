@@ -3,33 +3,33 @@ const {
     Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-    class User extends Model {
+    class Absence extends Model {
         static associate(models) {
+            Absence.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' })
         }
     }
-    User.init({
-        user_id: {
+    Absence.init({
+        absence_id: {
             type: DataTypes.INTEGER,
             defaultValue: DataTypes.INTEGER,
             allowNull: false,
             primaryKey: true
         },
-        code: {
-            type: DataTypes.STRING,
+        user_id: {
+            type: DataTypes.INTEGER,
             allowNull: false,
         },
-        name: {
-            type: DataTypes.STRING,
+        absence_date: {
+            type: DataTypes.DATE,
             allowNull: false,
         },
-        email: {
-            type: DataTypes.STRING,
+        absence_time: {
+            type: DataTypes.TIME,
         },
     }, {
         sequelize,
-        modelName: 'User',
-        tableName: 'users',
-        timestamps: false
+        modelName: 'Absence',
+        tableName: 'absences',
     });
-    return User;
+    return Absence;
 };

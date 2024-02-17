@@ -6,6 +6,5 @@ const { tokenMiddleware } = require('../middlewares/token.middleware')
 router.get('/', tokenMiddleware, AbsenceController.getAbsence)
 router.get('/generate-report', tokenMiddleware, AbsenceController.generateReport)
 router.post('/', tokenMiddleware, AbsenceController.storeAbsence)
-router.post('/testing', tokenMiddleware, AbsenceController.testingInput)
 
 module.exports = router

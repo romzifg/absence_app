@@ -58,30 +58,6 @@ exports.storeAbsence = async (req, res) => {
     }
 }
 
-exports.testingInput = async (req, res) => {
-    try {
-        if (req.body.qr !== "194644078041") {
-            return res.status(404).json({
-                statusCode: 404,
-                message: 'Not Found',
-                data: null
-            })
-        }
-
-        return res.status(200).json({
-            statusCode: 200,
-            message: 'Success',
-            data: null
-        })
-    } catch (err) {
-        return res.status(400).json({
-            statusCode: 400,
-            message: 'Bad Request',
-            data: null
-        })
-    }
-}
-
 exports.generateReport = async (req, res) => {
     try {
         const data = await Absence.findAll({
