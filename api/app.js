@@ -5,6 +5,7 @@ const cookieParse = require('cookie-parser');
 const AbsenceRouter = require('./routes/absence.route');
 const UserRouter = require('./routes/user.route');
 const UploadRouter = require('./routes/upload.route');
+const AuthRouter = require('./routes/auth.route');
 const path = require('path');
 require('dotenv').config();
 
@@ -18,6 +19,7 @@ var dir = path.join(__dirname, 'public');
 app.use('/public', express.static(dir));
 
 // Routing
+app.use('/api/v1/auth', AuthRouter)
 app.use('/api/v1/absence', AbsenceRouter)
 app.use('/api/v1/user', UserRouter)
 app.use('/api/v1/upload', UploadRouter)
