@@ -1,6 +1,7 @@
 import Absence from "./pages/Absence";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Report from "./pages/Report";
+import Auth from "./pages/Auth";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -11,6 +12,10 @@ const App = () => {
     {
       path: "/report",
       element: <Report />,
+    },
+    {
+      path: "/login",
+      element: <Auth />,
     },
   ]);
 

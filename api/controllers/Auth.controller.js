@@ -32,7 +32,7 @@ exports.login = async (req, res) => {
         }
 
         const token = signToken(userData.user_id)
-        return responseSuccess(res, token)
+        return responseSuccess(res, { user: userData, token: token })
     } catch (err) {
         console.log(err)
         return responseBadRequest(res)
