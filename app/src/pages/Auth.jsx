@@ -3,8 +3,11 @@ import axios from "axios";
 import AuthLayouts from "../Layouts/AuthLayout";
 import InputForm from "../components/Elements/Input";
 import Button from "../components/Elements/Button/Button";
+import { setToken } from "../helpers/SetGetToken";
+import { useNavigate } from "react-router-dom";
 
 const Auth = () => {
+  const navigate = useNavigate();
   const emailRef = useRef(null);
 
   const handleLogin = (e) => {
@@ -19,7 +22,8 @@ const Auth = () => {
         headers: { Authorization: import.meta.env.VITE_API_TOKEN },
       })
       .then((res) => {
-        console.log(res.data);
+        setToken(res.data.data);
+        navigate("/report");
       })
       .catch((err) => {
         console.log(err);

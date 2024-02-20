@@ -1,8 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { currentUser } from "../helpers/SetGetToken";
 
 const Navbar = () => {
   const navigate = useNavigate();
+
+  const onHandleLogout = () => {
+    localStorage.clear();
+    navigate("/login");
+  };
 
   return (
     <div className="sticky bg-blue-400 w-full h-16 rounded-md mb-7 flex flex-row justify-between items-center px-6">
@@ -22,12 +28,21 @@ const Navbar = () => {
         >
           Report
         </button>
-        <button
-          onClick={() => navigate("/login")}
-          className={`bg-white px-2 py-1 rounded text-md font-semibold text-blue-300 hover:text-blue-600`}
-        >
-          Login
-        </button>
+        {currentUser === null ? (
+          <button
+            onClick={() => navigate("/login")}
+            className={`bg-white px-2 py-1 rounded text-md font-semibold text-blue-300 hover:text-blue-600`}
+          >
+            Login
+          </button>
+        ) : (
+          <button
+            onClick={onHandleLogout}
+            className={`bg-white px-2 py-1 rounded text-md font-semibold text-blue-300 hover:text-blue-600`}
+          >
+            Logout
+          </button>
+        )}
       </div>
     </div>
   );
