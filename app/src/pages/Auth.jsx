@@ -1,10 +1,11 @@
 import { useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import AuthLayouts from "../Layouts/AuthLayout";
 import InputForm from "../components/Elements/Input";
 import Button from "../components/Elements/Button/Button";
 import { setToken } from "../helpers/SetGetToken";
-import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -26,7 +27,9 @@ const Auth = () => {
         navigate("/report");
       })
       .catch((err) => {
-        console.log(err);
+        toast.error(err.response.data.message, {
+          position: "top-center",
+        });
       });
   };
 
@@ -59,6 +62,7 @@ const Auth = () => {
           Login
         </Button>
       </form>
+      <ToastContainer />
     </AuthLayouts>
   );
 };
