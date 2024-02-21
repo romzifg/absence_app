@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import AuthLayouts from "../Layouts/AuthLayout";
+import AuthLayouts from "../layouts/AuthLayout";
 import InputForm from "../components/Elements/Input";
 import Button from "../components/Elements/Button/Button";
 import { setToken } from "../helpers/SetGetToken";
