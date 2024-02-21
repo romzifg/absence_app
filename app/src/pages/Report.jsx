@@ -1,42 +1,30 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Navbar from "../components/Navbar";
 import dayjs from "dayjs";
-import axios from "axios";
+import { useQuery } from "react-query";
+import { fetchReportAbsence, onClickReport } from "../fetching/Report/Report";
+import { toast, ToastContainer } from "react-toastify";
 
 const Report = () => {
-  const [limit, setLimit] = useState(10);
-  const [reportData, setReportData] = useState([]);
   const [date, setDate] = useState(dayjs(Date.now()).format("YYYY-MM-DD"));
+  const {
+    data: dataReport,
+    isError: isErrorDataReport,
+    isLoading: isLoadingDataReport,
+  } = useQuery("report", fetchReportAbsence);
 
-  const fetchReportAbsence = () => {
-    axios
-      .get(`${import.meta.env.VITE_API_URL}/absence`, {
-        headers: { Authorization: import.meta.env.VITE_API_TOKEN },
-      })
-      .then((res) => {
-        setReportData(res.data.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  if (isLoadingDataReport) {
+    return <div>Loading...</div>;
+  }
 
-  useEffect(() => {
-    fetchReportAbsence();
-  }, []);
+  if (isErrorDataReport) {
+    return toast.error(err.response.data.message, {
+      position: "top-center",
+    });
+  }
 
   const onChangeDate = (v) => {
     setDate(v.target.value);
-  };
-
-  const onClickReport = () => {
-    axios
-      .get(`${import.meta.env.VITE_API_URL}/absence/generate-report`, {
-        headers: { Authorization: import.meta.env.VITE_API_TOKEN },
-      })
-      .then((res) => {
-        window.open(res.data.path);
-      });
   };
 
   return (
@@ -69,8 +57,8 @@ const Report = () => {
             </tr>
           </thead>
           <tbody>
-            {reportData.map((el, key) => (
-              <tr>
+            {dataReport.data.map((el, key) => (
+              <tr key={key}>
                 <td>{key + 1}</td>
                 <td>{el.user.name}</td>
                 <td>{dayjs(el.absence_date).format("DD MMMM YYYY")}</td>
@@ -80,6 +68,7 @@ const Report = () => {
           </tbody>
         </table>
       </div>
+      <ToastContainer />
     </>
   );
 };
