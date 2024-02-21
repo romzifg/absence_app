@@ -44,10 +44,6 @@ const Absence = () => {
             setIsFailed(false);
           }, 2000);
         });
-
-      // console.log(event?.target?.value);
-      // console.log("Scanned code:", "Masuk");
-      // scanValueRef.current = "Masuk";
     }
   };
 

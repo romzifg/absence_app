@@ -11,17 +11,20 @@ import { AuthLogin } from "../fetching/Auth/Auth";
 const Auth = () => {
   const navigate = useNavigate();
   const emailRef = useRef(null);
-  const { mutate, isLoading } = useMutation(AuthLogin, {
-    onSuccess: (res) => {
-      setToken(res.data.data);
-      navigate("/report");
-    },
-    onError: (err) => {
-      toast.error(err.response.data.message, {
-        position: "top-center",
-      });
-    },
-  });
+  const { mutate: mutateLogin, isLoading: isLoadingLogin } = useMutation(
+    AuthLogin,
+    {
+      onSuccess: (res) => {
+        setToken(res.data.data);
+        navigate("/report");
+      },
+      onError: (err) => {
+        toast.error(err.response.data.message, {
+          position: "top-center",
+        });
+      },
+    }
+  );
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -29,7 +32,7 @@ const Auth = () => {
       email: e.target.email.value,
       password: e.target.password.value,
     };
-    mutate(payload);
+    mutateLogin(payload);
   };
 
   useEffect(() => {
@@ -58,8 +61,10 @@ const Auth = () => {
           name="password"
         />
         <Button
-          classname={`${isLoading ? "bg-gray-600 " : "bg-blue-600 "}w-full`}
-          type={`${isLoading ? "none" : "submit"}`}
+          classname={`${
+            isLoadingLogin ? "bg-gray-600 " : "bg-blue-600 "
+          }w-full`}
+          type={`${isLoadingLogin ? "none" : "submit"}`}
         >
           Login
         </Button>
