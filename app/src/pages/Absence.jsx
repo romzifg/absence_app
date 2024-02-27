@@ -10,7 +10,6 @@ const Absence = () => {
 
   useEffect(() => {
     scanValueRef?.current?.focus();
-    localStorage.clear();
   }, []);
 
   const handleKeyDown = (event) => {

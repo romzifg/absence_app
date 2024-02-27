@@ -6,12 +6,11 @@ import InputForm from "../components/Elements/Input";
 import Button from "../components/Elements/Button/Button";
 import { toast, ToastContainer } from "react-toastify";
 import { AuthLogin } from "../fetching/Auth/Auth";
-import storeLogin from "../store/AuthStore";
+import { setToken } from "../helpers/SetGetToken";
 
 const Auth = () => {
   const navigate = useNavigate();
   const emailRef = useRef(null);
-  const { setData } = storeLogin();
 
   const { mutate: mutateLogin, isLoading: isLoadingLogin } = useMutation(
     AuthLogin,
@@ -20,9 +19,10 @@ const Auth = () => {
         toast.success("Authenticate", {
           position: "top-center",
         });
+        setToken(res.data.data);
 
         setTimeout(() => {
-          navigate("/");
+          window.location = "/";
         }, 500);
       },
       onError: (err) => {
