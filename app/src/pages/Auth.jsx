@@ -1,5 +1,4 @@
 import { useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 import { useMutation } from "react-query";
 import AuthLayouts from "../layouts/AuthLayout";
 import InputForm from "../components/Elements/Input";
@@ -9,7 +8,6 @@ import { AuthLogin } from "../fetching/Auth/Auth";
 import { setToken } from "../helpers/SetGetToken";
 
 const Auth = () => {
-  const navigate = useNavigate();
   const emailRef = useRef(null);
 
   const { mutate: mutateLogin, isLoading: isLoadingLogin } = useMutation(
@@ -23,7 +21,7 @@ const Auth = () => {
 
         setTimeout(() => {
           window.location = "/";
-        }, 500);
+        }, 300);
       },
       onError: (err) => {
         toast.error(err.response.data.message, {

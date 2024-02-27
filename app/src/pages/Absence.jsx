@@ -1,12 +1,43 @@
 import { useState, useEffect, useRef } from "react";
-import axios from "axios";
 import Navbar from "../components/Navbar";
 import QrImage from "../assets/qr-code-scan.png";
+import { toast, ToastContainer } from "react-toastify";
+import { useMutation } from "react-query";
+import { AbsencePost } from "../fetching/Absence/Absence";
 
 const Absence = () => {
   const [isFailed, setIsFailed] = useState(false);
   const [isHide, setIsHide] = useState(true);
   const scanValueRef = useRef(null);
+  const { mutate: mutateAbsence } = useMutation(AbsencePost, {
+    onSuccess: (res) => {
+      toast.success("Absence Success", {
+        position: "top-center",
+      });
+      setTimeout(() => {
+        scanValueRef.current.value = null;
+        scanValueRef?.current?.focus();
+      }, 2000);
+      setIsFailed(false);
+      setIsHide(false);
+      setTimeout(() => {
+        setIsHide(true);
+      }, 2000);
+    },
+    onError: (err) => {
+      toast.success("Absence Failed", {
+        position: "top-center",
+      });
+      setTimeout(() => {
+        scanValueRef.current.value = null;
+        scanValueRef?.current?.focus();
+      }, 2000);
+      setIsFailed(true);
+      setTimeout(() => {
+        setIsFailed(false);
+      }, 2000);
+    },
+  });
 
   useEffect(() => {
     scanValueRef?.current?.focus();
@@ -14,35 +45,7 @@ const Absence = () => {
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
-      axios
-        .post(
-          `${import.meta.env.VITE_API_URL}/absence/testing`,
-          {
-            qr: event?.target?.value,
-          },
-          { headers: { Authorization: import.meta.env.VITE_API_TOKEN } }
-        )
-        .then((res) => {
-          setTimeout(() => {
-            scanValueRef.current.value = null;
-            scanValueRef?.current?.focus();
-          }, 2000);
-          setIsFailed(false);
-          setIsHide(false);
-          setTimeout(() => {
-            setIsHide(true);
-          }, 2000);
-        })
-        .catch((err) => {
-          setTimeout(() => {
-            scanValueRef.current.value = null;
-            scanValueRef?.current?.focus();
-          }, 2000);
-          setIsFailed(true);
-          setTimeout(() => {
-            setIsFailed(false);
-          }, 2000);
-        });
+      mutateAbsence(event?.target?.value);
     }
   };
 
@@ -70,6 +73,8 @@ const Absence = () => {
             <p className="text-white">Success Absence</p>
           </div>
         ) : null}
+
+        <ToastContainer />
       </div>
     </>
   );
