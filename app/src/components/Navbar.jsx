@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { currentUser } from "../helpers/SetGetToken";
 
@@ -22,12 +21,6 @@ const Navbar = () => {
         >
           Absence
         </button>
-        <button
-          onClick={() => navigate("/report")}
-          className={`bg-white px-2 py-1 rounded text-md font-semibold text-blue-300 hover:text-blue-600`}
-        >
-          Report
-        </button>
         {currentUser === null ? (
           <button
             onClick={() => navigate("/login")}
@@ -36,12 +29,20 @@ const Navbar = () => {
             Login
           </button>
         ) : (
-          <button
-            onClick={onHandleLogout}
-            className={`bg-white px-2 py-1 rounded text-md font-semibold text-blue-300 hover:text-blue-600`}
-          >
-            Logout
-          </button>
+          <>
+            <button
+              onClick={() => navigate("/report")}
+              className={`bg-white px-2 py-1 rounded text-md font-semibold text-blue-300 hover:text-blue-600`}
+            >
+              Report
+            </button>
+            <button
+              onClick={onHandleLogout}
+              className={`bg-white px-2 py-1 rounded text-md font-semibold text-blue-300 hover:text-blue-600`}
+            >
+              Logout
+            </button>
+          </>
         )}
       </div>
     </div>

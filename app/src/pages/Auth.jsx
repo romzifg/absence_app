@@ -4,19 +4,26 @@ import { useMutation } from "react-query";
 import AuthLayouts from "../layouts/AuthLayout";
 import InputForm from "../components/Elements/Input";
 import Button from "../components/Elements/Button/Button";
-import { setToken } from "../helpers/SetGetToken";
 import { toast, ToastContainer } from "react-toastify";
 import { AuthLogin } from "../fetching/Auth/Auth";
+import storeLogin from "../store/AuthStore";
 
 const Auth = () => {
   const navigate = useNavigate();
   const emailRef = useRef(null);
+  const { setData } = storeLogin();
+
   const { mutate: mutateLogin, isLoading: isLoadingLogin } = useMutation(
     AuthLogin,
     {
       onSuccess: (res) => {
-        setToken(res.data.data);
-        navigate("/report");
+        toast.success("Authenticate", {
+          position: "top-center",
+        });
+
+        setTimeout(() => {
+          navigate("/");
+        }, 500);
       },
       onError: (err) => {
         toast.error(err.response.data.message, {
