@@ -1,7 +1,6 @@
 const {
     User
 } = require('../../models');
-const validator = require('validator');
 const excel = require('exceljs');
 const { generateCode } = require('../../helpers/generateCode');
 
@@ -32,15 +31,6 @@ exports.storeUser = async (req, res, next) => {
         const checkUser = await User.findOne({ where: { code: code } })
         if (checkUser) {
             code = generateCode()
-        }
-
-        if (!validator.isEmail(req.body.email) || validator.isEmpty(req.body.email)) {
-            res.statusCode = 400;
-            throw new Error('Bad Request, Invalid Email')
-        }
-        if (validator.isEmpty(req.body.name)) {
-            res.statusCode = 400;
-            throw new Error('Bad Request, Name Cannot Be Empty')
         }
 
         const data = await User.create({ ...req.body, code: code })

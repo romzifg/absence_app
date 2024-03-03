@@ -13,11 +13,6 @@ const signToken = (id) => {
 
 exports.login = async (req, res, next) => {
     try {
-        if (!req.body.email || !req.body.password) {
-            res.statusCode = 400;
-            throw new Error('Error Validation, Email or Password cannot be empty')
-        }
-
         const userData = await User.findOne({ where: { email: req.body.email } })
         if (!userData) {
             res.statusCode = 400;
