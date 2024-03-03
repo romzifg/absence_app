@@ -3,7 +3,6 @@ const {
     Auth
 } = require('../../models');
 const jwt = require('jsonwebtoken')
-const { responseSuccess, responseBadRequest, responseNotFound } = require('../../helpers/response');
 require('dotenv').config()
 
 const signToken = (id) => {
@@ -12,44 +11,53 @@ const signToken = (id) => {
     })
 }
 
-exports.login = async (req, res) => {
+exports.login = async (req, res, next) => {
     try {
         if (!req.body.email || !req.body.password) {
-            return responseBadRequest(res, 'Error Validation, Email or Password cannot be empty')
+            res.statusCode = 400;
+            throw new Error('Error Validation, Email or Password cannot be empty')
         }
 
         const userData = await User.findOne({ where: { email: req.body.email } })
         if (!userData) {
-            return responseBadRequest(res, "Invalid Email")
+            res.statusCode = 400;
+            throw new Error('Invalid Email')
         }
         const auth = await Auth.findOne({ wher: { user_id: userData.user_id, status: 1 } })
         if (!auth) {
-            return responseNotFound(res)
+            res.statusCode = 404;
+            throw new Error('User Not Found')
         }
 
         if (!(await auth.CorrectPassword(req.body.password, auth.password))) {
-            return responseBadRequest(res, "Invalid Password")
+            res.statusCode = 400;
+            throw new Error('Invalid Password')
         }
 
         const token = signToken(userData.user_id)
-        return responseSuccess(res, { user: userData, token: token })
+        return res.status(200).json({
+            statusCode: 200,
+            message: 'Login Success',
+            data: { user: userData, token: token }
+        })
     } catch (err) {
-        console.log(err)
-        return responseBadRequest(res)
+        next(err)
     }
 }
 
-exports.giveAccess = async (req, res) => {
+exports.giveAccess = async (req, res, next) => {
     try {
         const user = await User.findOne({ where: { user_id: req.body.user_id } })
         if (!user) {
-            return responseNotFound(res)
+            res.statusCode = 404;
+            throw new Error('User Not Found')
         }
 
         const auth = await Auth.findOne({ where: { user_id: req.body.user_id } })
         if (!auth) {
             if (req.body.password !== req.body.passwordConfirm) {
-                return responseBadRequest(res, "Password is Not Match")
+                res.statusCode = 400;
+                throw new Error('Password is Not Match')
             }
 
             await Auth.create({
@@ -65,22 +73,34 @@ exports.giveAccess = async (req, res) => {
             }
         }
 
-        return responseSuccess(res, user)
+        return res.status(200).json({
+            statusCode: 200,
+            message: 'Success Give Access',
+            data: user
+        })
     } catch (err) {
-        return responseBadRequest(res)
+        next(err)
     }
 }
 
 exports.removeAccess = async (req, res) => {
     try {
         const auth = await Auth.findOne({ where: { user_id: req.params.id } })
+        if (!auth) {
+            res.statusCode = 404;
+            throw new Error('User Not Found')
+        }
 
         await auth.update({
             status: 0
         })
 
-        return responseSuccess(res, auth.user_id)
+        return res.status(200).json({
+            statusCode: 200,
+            message: 'Success Remove Access',
+            data: auth.user_id
+        })
     } catch (err) {
-        return responseBadRequest(res)
+        next(err)
     }
 }

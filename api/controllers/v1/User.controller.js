@@ -4,25 +4,29 @@ const {
 const validator = require('validator');
 const excel = require('exceljs');
 const { generateCode } = require('../../helpers/generateCode');
-const { responseSuccess, responseBadRequest, responseNotFound } = require('../../helpers/response');
 
-exports.getUser = async (req, res) => {
+exports.getUser = async (req, res, next) => {
     try {
         const data = await User.findAll({ where: { deletedAt: null } })
 
-        return responseSuccess(res, data)
+        return res.status(200).json({
+            statusCode: 200,
+            message: "Success Get Data",
+            data: data
+        })
     } catch (err) {
-        return responseBadRequest(res)
+        next(err)
     }
 }
 
-exports.storeUser = async (req, res) => {
+exports.storeUser = async (req, res, next) => {
     try {
         let code = ""
 
         code = generateCode()
         if (code === "") {
-            return responseBadRequest(res, "Bad Request, Error Generate Code")
+            res.statusCode = 400;
+            throw new Error('Bad Request, Error Generate Code')
         }
 
         const checkUser = await User.findOne({ where: { code: code } })
@@ -31,20 +35,26 @@ exports.storeUser = async (req, res) => {
         }
 
         if (!validator.isEmail(req.body.email) || validator.isEmpty(req.body.email)) {
-            return responseBadRequest(res, "Bad Request, Invalid Email")
+            res.statusCode = 400;
+            throw new Error('Bad Request, Invalid Email')
         }
         if (validator.isEmpty(req.body.name)) {
-            return responseBadRequest(res, "Bad Request, Name Cannot Be Empty")
+            res.statusCode = 400;
+            throw new Error('Bad Request, Name Cannot Be Empty')
         }
 
         const data = await User.create({ ...req.body, code: code })
-        return responseSuccess(res, data)
+        return res.status(200).json({
+            statusCode: 200,
+            message: "Success Add Data",
+            data: data
+        })
     } catch (err) {
-        return responseBadRequest(res)
+        next(err)
     }
 }
 
-exports.userBulkCreate = async (req, res) => {
+exports.userBulkCreate = async (req, res, next) => {
     try {
         const filepath = req.body.path.replace(`${req.protocol}://${req.get('host')}`, "")
         const path = `${__dirname}/..${filepath}`
@@ -74,7 +84,8 @@ exports.userBulkCreate = async (req, res) => {
 
             code = generateCode()
             if (code === "") {
-                return responseBadRequest(res, "Bad Request, Error Generate Code")
+                res.statusCode = 400;
+                throw new Error('Bad Request, Error Generate Code')
             }
 
             const checkUser = await User.findOne({ where: { code: code } })
@@ -88,37 +99,51 @@ exports.userBulkCreate = async (req, res) => {
 
         const data = await User.bulkCreate(userData)
 
-        return responseSuccess(res, data.length)
+        return res.status(200).json({
+            statusCode: 200,
+            message: "Success Bulk Create",
+            data: data.length
+        })
     } catch (err) {
-        return responseBadRequest(res)
+        next(err)
 
     }
 }
 
-exports.updateUser = async (req, res) => {
+exports.updateUser = async (req, res, next) => {
     try {
         const user = await User.findOne({ where: { user_id: req.params.id, deletedAt: null } })
         if (!user) {
-            return responseNotFound(res)
+            res.statusCode = 404;
+            throw new Error('User Not Found')
         }
 
         await user.update({ ...req.body })
-        return responseSuccess(res, data.user_id)
+        return res.status(200).json({
+            statusCode: 200,
+            message: "Success Update Data",
+            data: data.user_id
+        })
     } catch (err) {
-        return responseBadRequest(res)
+        next(err)
     }
 }
 
-exports.deleteUser = async (req, res) => {
+exports.deleteUser = async (req, res, next) => {
     try {
         const user = await User.findOne({ where: { user_id: req.params.id, deletedAt: null } })
         if (!user) {
-            return responseNotFound(res)
+            res.statusCode = 404;
+            throw new Error('User Not Found')
         }
 
         await user.update({ deletedAt: Date.now() })
-        return responseSuccess(res, data.user_id)
+        return res.status(200).json({
+            statusCode: 200,
+            message: "Success Delete Data",
+            data: data.user_id
+        })
     } catch (err) {
-        return responseBadRequest(res)
+        next(err)
     }
 }

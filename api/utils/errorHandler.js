@@ -7,15 +7,15 @@ exports.notFound = (req, res, next) => {
 }
 
 exports.errorHandler = (err, req, res, next) => {
-    console.log("masuk")
     const statusCode = res.statusCode >= 400 ? res.statusCode : 500
     res.status(statusCode)
 
     const responseBody = {
+        statusCode: statusCode,
         message: err.message,
         stack: process.env.APP_NODE_ENV === 'production' ? 'ERR' : err.stack
     }
 
     console.log('Error', responseBody)
-    res.json(responseBody)
+    return res.json(responseBody)
 }

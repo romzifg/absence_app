@@ -5,7 +5,7 @@ const {
 const dayjs = require('dayjs')
 const excelJS = require("exceljs");
 
-exports.getAbsence = async (req, res) => {
+exports.getAbsence = async (req, res, next) => {
     try {
         const data = await Absence.findAll({
             include: [
@@ -19,23 +19,16 @@ exports.getAbsence = async (req, res) => {
             data: data
         })
     } catch (err) {
-        return res.status(400).json({
-            statusCode: 400,
-            message: 'Bad Request',
-            data: null
-        })
+        next(err)
     }
 }
 
-exports.storeAbsence = async (req, res) => {
+exports.storeAbsence = async (req, res, next) => {
     try {
         const user = await User.findOne({ where: { code: req.body.code } })
         if (!user) {
-            return res.status(404).json({
-                statusCode: 404,
-                message: 'User Not Registered',
-                data: null
-            })
+            res.statusCode = 404
+            throw new Error('User Not Registered')
         }
 
         const data = await Absence.create({
@@ -50,15 +43,11 @@ exports.storeAbsence = async (req, res) => {
             data: data
         })
     } catch (err) {
-        return res.status(400).json({
-            statusCode: 400,
-            message: 'Bad Request',
-            data: null
-        })
+        next(err)
     }
 }
 
-exports.generateReport = async (req, res) => {
+exports.generateReport = async (req, res, next) => {
     try {
         const data = await Absence.findAll({
             include: [
@@ -97,12 +86,11 @@ exports.generateReport = async (req, res) => {
                     message: 'Success',
                     path: pathFile,
                 });
+            }).catch((err) => {
+                res.statusCode = 400
+                throw new Error(err)
             });
     } catch (err) {
-        return res.status(400).json({
-            statusCode: 400,
-            message: 'Bad Request',
-            data: null
-        })
+        next(err)
     }
 }

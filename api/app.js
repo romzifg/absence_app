@@ -17,6 +17,7 @@ var dir = path.join(__dirname, 'public');
 app.use('/public', express.static(dir));
 
 // Routing
+// Api V1
 app.use('/api/v1', apiv1)
 
 app.use(notFound);
