@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const cookieParse = require('cookie-parser');
+const helmet = require('helmet');
 const path = require('path');
 const apiv1 = require('./routes/v1/index')
 const { errorHandler, notFound } = require('./utils/errorHandler');
@@ -11,7 +12,11 @@ require('dotenv').config();
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParse())
-app.use(cors())
+app.use(cors({
+    origin: `${process.env.APP_NODE_URL}`
+}))
+app.use(helmet())
+
 
 var dir = path.join(__dirname, 'public');
 app.use('/public', express.static(dir));
