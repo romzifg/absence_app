@@ -1,10 +1,10 @@
 const {
     User
-} = require('../models');
+} = require('../../models');
 const validator = require('validator');
 const excel = require('exceljs');
-const { generateCode } = require('../helpers/generateCode');
-const { responseSuccess, responseBadRequest, responseNotFound } = require('../helpers/response');
+const { generateCode } = require('../../helpers/generateCode');
+const { responseSuccess, responseBadRequest, responseNotFound } = require('../../helpers/response');
 
 exports.getUser = async (req, res) => {
     try {

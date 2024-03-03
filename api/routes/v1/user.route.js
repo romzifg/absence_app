@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const UserController = require('../controllers/User.controller');
-const { tokenMiddleware } = require('../middlewares/token.middleware')
+const UserController = require('../../controllers/v1/User.controller');
+const { tokenMiddleware } = require('../../middlewares/token.middleware')
 
 router.get('/', tokenMiddleware, UserController.getUser)
 router.post('/', tokenMiddleware, UserController.storeUser)

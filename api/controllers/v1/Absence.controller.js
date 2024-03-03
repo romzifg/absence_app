@@ -1,7 +1,7 @@
 const {
     User,
     Absence
-} = require('../models');
+} = require('../../models');
 const dayjs = require('dayjs')
 const excelJS = require("exceljs");
 

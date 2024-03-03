@@ -1,9 +1,9 @@
 const {
     User,
     Auth
-} = require('../models');
+} = require('../../models');
 const jwt = require('jsonwebtoken')
-const { responseSuccess, responseBadRequest, responseNotFound } = require('../helpers/response');
+const { responseSuccess, responseBadRequest, responseNotFound } = require('../../helpers/response');
 require('dotenv').config()
 
 const signToken = (id) => {

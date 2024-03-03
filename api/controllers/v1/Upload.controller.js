@@ -1,4 +1,4 @@
-const { responseSuccess, responseBadRequest } = require('../helpers/response');
+const { responseSuccess, responseBadRequest } = require('../../helpers/response');
 
 exports.uploadFile = async (req, res) => {
     try {
